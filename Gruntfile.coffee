@@ -1062,23 +1062,23 @@ module.exports = (grunt) ->
 
         connect:
             #options:
-                #port: 3003
+                #port: 3005
 
             build:
                 options:
                     base: 'build'
-                    port: 3003
-                    livereload: 35730
+                    port: 3005
+                    livereload: 35735
 
             dist:
                 options:
                     base: 'dist'
-                    port: 3003
+                    port: 3005
                     keepalive: true
 
         watch:
             options:
-                livereload: 35730
+                livereload: 35735
                 livereloadOnError: false
     
             pages:
