@@ -14,7 +14,7 @@ module.exports = (grunt) ->
         'init'
         'Only needed when the repo is first cloned'
         [
-            'hub'
+            #'hub'
             'thanks'
             'api:enhance'
         ]

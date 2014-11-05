@@ -7,7 +7,7 @@
     "url": "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "postinstall": "bower install && cd lib/wet-boew && bower install && npm install && bower link && cd ../GCWeb && bower link wet-boew && npm install && cd ../.. && grunt init"
+        "postinstall": "bower install && cd lib/wet-boew && bower install && npm install && bower link && cd ../GCWeb && bower link wet-boew && npm install && grunt && cd ../.. && grunt init"
     },
     "keywords": [
         "ramp",
@@ -63,5 +63,5 @@
 
     "deployFolder": "//sncr01wbingsdv1.ncr.int.ec.gc.ca/Drive-E/wwwroot/RAMP_Sample/w4/canada",
 
-    "themepath": "lib/GCWeb/"
+    "themepath": "lib/gcweb/"
 }
