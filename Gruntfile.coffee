@@ -439,6 +439,7 @@ module.exports = (grunt) ->
                 src: [
                     '**/*.*'
                     '!ajax/**/*.*'
+                    'ajax/sitemenu-*.*'
                     '!**/logo.*'
                     '!**/favicon*.*'
                     '!demos/**/*.*'
@@ -455,6 +456,7 @@ module.exports = (grunt) ->
                 src: [
                     '**/*.*'
                     '!ajax/**/*.*'
+                    'ajax/sitemenu-*.*'
                     '!**/logo.*'
                     '!**/favicon*.*'
                     '!demos/**/*.*'
@@ -663,13 +665,13 @@ module.exports = (grunt) ->
 
             ajax:
                 options:
-                    layoutdir: '<%= corepath %>site/layouts'
+                    layoutdir: 'site/layouts'
                     flatten: true
                     plugins: ['assemble-contrib-i18n']
                     i18n:
                         languages: ['en', 'fr']
                         templates: [
-                            '<%= corepath %>site/pages/ajax/*.hbs'
+                            'site/pages/ajax/*.hbs'
                         ]
                 dest: 'build/ajax/'
                 src: '!*.*'
