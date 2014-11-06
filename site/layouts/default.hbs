@@ -15,7 +15,7 @@
 		{{>headresources}}
 	</head>
 	<body {{#if pageclass}}class="{{pageclass}}" {{/if}}vocab="http://schema.org/" typeof="WebPage">
-		{{>google}}
+		{{!>google}}
 		<ul id="wb-tphp">
 			<li class="wb-slc">
 				<a class="wb-sl" href="#wb-cont">{{{i18n "tmpl-skip-cont"}}}</a>
@@ -81,7 +81,7 @@
 
 			{{>contentbuttons}}
 			{{>body}}
-			{{>features}}
+			{{!>features}}
 {{#if page.dateModified}}
 	{{#is page.share "true"}}
 			{{>datemodified-share}}
