@@ -53,7 +53,7 @@ footer {
         position: absolute !important;
         right: 0;
         left: 0;
-        top: 74px;
+        top: 0;
         z-index: 1;
 
         &:before {
@@ -65,6 +65,11 @@ footer {
             top: 0;
             bottom: 0;
             display: block;
+            border-top: 1px solid @light-grey-color;            
+        }
+
+        &.expanded:before {
+            box-shadow: @upper-large-shadow-out;
         }
     }
 }

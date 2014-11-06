@@ -1,4 +1,4 @@
-﻿/*global define, TimelineLite, $ */
+﻿/*global define, TimelineLite, TweenLite, $ */
 
 /**
 * This submodule contains theme-specific classes with animation sequences such as Full Screen transition or tooltip setter helper method.
@@ -15,13 +15,14 @@
 * @uses Util
 */
 
-define(["utils/util"],
-    function (util) {
+define(["utils/util", "utils/popupManager"],
+    function (util, PopupManager) {
         "use strict";
 
         var body = $("body"),
             wbCore = $("main"),
             wbFoot = $("footer"),
+            footNav = wbFoot.find('.wb-navcurr'),
 
             megaMenuDiv = $("#wb-sm"),
             //navigation = $("#wb-bar"),
@@ -45,23 +46,32 @@ define(["utils/util"],
 
             heightGain = layout.headerHeight - layout.headerHeightCollapsed + layout.footerHeight - layout.footerHeightCollapsed,
 
+            footerTimeLine = new TimelineLite(
+                {
+                    paused: true
+                }),
+
             isFullScreen = false,
             fullScreenTimeLine = new TimelineLite(
                 {
                     paused: true
                 });
+        
+        footerTimeLine
+            .to(footNav, transitionDuration, { top: "-313px", ease: "easeOutCirc" })
+            .set(footNav, { className: "+=expanded" }, 0);
 
         fullScreenTimeLine
-                .to(header, transitionDuration, { top: "-99px", position: "relative", ease: "easeOutCirc" }, 0)
-                .set([megaMenuDiv], { display: "none !important" })
+            .to(header, transitionDuration, { top: "-99px", position: "relative", ease: "easeOutCirc" }, 0)
+            .set([megaMenuDiv], { display: "none !important" })
 
-                //.to(title, transitionDuration, { top: "-22px" }, 0)
+            //.to(title, transitionDuration, { top: "-22px" }, 0)
 
-                //.fromTo(body, transitionDuration, { "background-position-y": "43px" }, { "background-position-y": "-26px", ease: "easeOutCirc" }, 0)
-                .to(wbCore, transitionDuration, { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
-                .to(wbFoot, transitionDuration, { height: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
+            //.fromTo(body, transitionDuration, { "background-position-y": "43px" }, { "background-position-y": "-26px", ease: "easeOutCirc" }, 0)
+            .to(wbCore, transitionDuration, { top: layout.headerHeightCollapsed, bottom: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
+            .to(wbFoot, transitionDuration, { height: layout.footerHeightCollapsed, ease: "easeOutCirc" }, 0)
 
-                .set(body, { className: "+=full-screen" });
+            .set(body, { className: "+=full-screen" });
 
         /**
          * Toggles full screen mode
@@ -100,6 +110,24 @@ define(["utils/util"],
 
             extraTweeen.play();
         }
+
+        PopupManager.registerPopup(wbFoot, "hoverIntent, focus",
+            function (d) {
+                footerTimeLine.onComplete = function () { d.resolve(); };
+                footerTimeLine.play();
+            },
+            {
+                targetSelector: ".wb-navcurr, .wb-navcurr a",
+                useAria: false,
+                timeout: 500,
+                closeHandler: function (d) {
+                    footerTimeLine.onComplete = function () { d.resolve(); };
+                    footerTimeLine.reverse();
+                }
+            }
+        );
+
+        TweenLite.to(footNav, transitionDuration, { top: "74px", ease: "easeOutCirc" });
 
         return {
             /**
