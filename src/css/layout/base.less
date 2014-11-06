@@ -33,6 +33,13 @@
     }
 }
 
+#wb-dtmd {
+    position: fixed;
+    right: 0;
+    bottom: 14px;
+    z-index: 51;
+}
+
 footer {
     left: 0;
     right: 0;
@@ -40,12 +47,14 @@ footer {
     position: absolute !important;
     overflow: visible;
     border-top: none;
+    z-index: 50 !important;
 
     .wb-navcurr {
         position: absolute !important;
         right: 0;
         left: 0;
-        z-index: -1;
+        top: 74px;
+        z-index: 1;
 
         &:before {
             content: "";
