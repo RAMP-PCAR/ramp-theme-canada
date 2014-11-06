@@ -1,0 +1,37 @@
+<!--[if gte IE 9 | !IE ]><!-->
+<link href="{{assets}}/assets/favicon.ico" rel="icon" type="image/x-icon" />
+<link rel="stylesheet" href="{{assets}}/css/wet-boew{{environment.suffix}}.css" />
+<!--<![endif]-->
+<link rel="stylesheet" href="{{assets}}/css/theme{{environment.suffix}}.css" />
+{{#if page.css}}{{#each page.css}}<link rel="stylesheet" href="{{this}}{{../environment.suffix}}.css" />{{/each}}{{/if}}
+{{#compare section "==" "message" }}<link rel="stylesheet" href="{{assets}}/css/messages{{environment.suffix}}.css" />{{/compare}}
+{{#compare section "==" "mobile-centre" }}<link rel="stylesheet" href="{{assets}}/css/mobile-centre{{environment.suffix}}.css" />{{/compare}}
+{{#compare section "==" "social-media-centre" }}<link rel="stylesheet" href="{{assets}}/css/social-media-centre{{environment.suffix}}.css" />{{/compare}}
+
+<!--[if lt IE 9]>
+<link href="{{assets}}/assets/favicon.ico" rel="shortcut icon" />
+{{#compare section "==" "message" }}<link rel="stylesheet" href="{{assets}}/css/messages-ie{{environment.suffix}}.css" />{{/compare}}
+<link rel="stylesheet" href="{{assets}}/css/ie8-wet-boew{{environment.suffix}}.css" />
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/{{environment.jqueryOldIEVersion}}/jquery{{environment.suffix}}.js"></script>
+<script src="{{assets}}/js/ie8-wet-boew{{environment.suffix}}.js"></script>
+<![endif]-->
+<!--[if lte IE 9]>
+{{#compare section "==" "mobile-centre" }}<link rel="stylesheet" href="{{assets}}/css/mobile-centre-ie{{environment.suffix}}.css" />{{/compare}}
+{{#compare section "==" "social-media-centre" }}<link rel="stylesheet" href="{{assets}}/css/social-media-centre-ie{{environment.suffix}}.css" />{{/compare}}
+<![endif]-->
+
+<noscript><link rel="stylesheet" href="{{assets}}/css/noscript{{environment.suffix}}.css" /></noscript>
+<script>dataLayer1 = [];</script>
+
+<!-- RAMP CSS Start -->
+<link href="css/lib/lib.css" rel="stylesheet" type="text/css" />
+<link href="css/theme.less.css" rel="stylesheet" type="text/css" />
+<!-- RAMP CSS End -->
+<!-- EsriCSSStart -->
+<!--<link media="screen" href="http://js.arcgis.com/3.10/js/esri/css/esri.css"
+      rel="stylesheet" rel="stylesheet">-->
+<link media="screen" href="http://js.arcgis.com/3.10/js/dojo/dijit/themes/tundra/tundra.css"
+      type="text/css" rel="stylesheet">
+<!-- EsriCSSEnd -->
+
+<script></script>
