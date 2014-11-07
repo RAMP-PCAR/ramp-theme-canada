@@ -33,8 +33,8 @@ define(["utils/util", "utils/popupManager"],
             transitionDuration = 0.5,
 
             layout = {
-                headerHeight: 193,
-                headerHeightCollapsed: 55,
+                headerHeight: 194,
+                headerHeightCollapsed: 56,
 
                 footerHeight: 84,
                 footerHeightCollapsed: 5,

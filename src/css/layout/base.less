@@ -1,10 +1,12 @@
 ﻿main {
-    top: 193px;
-    bottom: 84px;
-    width: 100% !important;
-    border-top: 1px solid @medium-grey-color;
+    top: @header-height;
+    bottom: @footer-height;
+    width: 100% !important;    
 }
 
+header {
+    border-bottom: 1px solid @medium-grey-color;
+}
 
 @media (min-width: 768px) {
     .nvbar,
