@@ -14,7 +14,7 @@ module.exports = (grunt) ->
         'init'
         'Only needed when the repo is first cloned'
         [
-            'hub'
+            #'hub'
             'thanks'
             'api:enhance'
         ]
@@ -439,8 +439,9 @@ module.exports = (grunt) ->
                 src: [
                     '**/*.*'
                     '!ajax/**/*.*'
+                    'ajax/sitemenu-*.*'
                     '!**/logo.*'
-                    '!**/favicon*.*'
+                    #'!**/favicon*.*'
                     '!demos/**/*.*'
                     '!docs/**/*.*'
                     '!test/**/*.*'
@@ -455,8 +456,9 @@ module.exports = (grunt) ->
                 src: [
                     '**/*.*'
                     '!ajax/**/*.*'
+                    'ajax/sitemenu-*.*'
                     '!**/logo.*'
-                    '!**/favicon*.*'
+                    #'!**/favicon*.*'
                     '!demos/**/*.*'
                     '!docs/**/*.*'
                     '!test/**/*.*'
@@ -663,13 +665,13 @@ module.exports = (grunt) ->
 
             ajax:
                 options:
-                    layoutdir: '<%= corepath %>site/layouts'
+                    layoutdir: 'site/layouts'
                     flatten: true
                     plugins: ['assemble-contrib-i18n']
                     i18n:
                         languages: ['en', 'fr']
                         templates: [
-                            '<%= corepath %>site/pages/ajax/*.hbs'
+                            'site/pages/ajax/*.hbs'
                         ]
                 dest: 'build/ajax/'
                 src: '!*.*'
@@ -713,17 +715,7 @@ module.exports = (grunt) ->
                 ]
                 dest: 'dist/css/'
                 rename: (dest, src) ->
-                        dest + src.replace('.css', '.min.css');
-            ###
-            wetTheme:
-                options:
-                    banner: ' banner '
-                expand: true
-                cwd: '<%= pkg.themepath %>dist/unmin/css/'
-                src: '*theme*.css'
-                ext: '.min.css'
-                dest: '<%= pkg.themepath %>dist/css'
-            ###
+                            dest + src.replace('.css', '.min.css');
 
         uglify:
             options:
@@ -810,17 +802,7 @@ module.exports = (grunt) ->
                 dest: 'build/css/'
                 #rename: (dest, src) ->
                     #dest + src.replace('.css', '.pref.css')
-            
-            ###
-            wetTheme:
-                cwd: '<%= pkg.themepath %>dist/unmin/css'
-                src: [
-                    '*theme*.css/'
-                ]
-                dest: '<%= pkg.themepath %>dist/unmin/css'
-                expand: true
-            ###
-
+                    
         replace:
             options:
                 force: true
@@ -1062,23 +1044,23 @@ module.exports = (grunt) ->
 
         connect:
             #options:
-                #port: 3003
+                #port: 3005
 
             build:
                 options:
                     base: 'build'
-                    port: 3003
-                    livereload: 35730
+                    port: 3005
+                    livereload: 35735
 
             dist:
                 options:
                     base: 'dist'
-                    port: 3003
+                    port: 3005
                     keepalive: true
 
         watch:
             options:
-                livereload: 35730
+                livereload: 35735
                 livereloadOnError: false
     
             pages:
