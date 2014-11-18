@@ -530,7 +530,7 @@ module.exports = (grunt) ->
 
             configDist:
                     expand: true
-                cwd: 'build/'
+                    cwd: 'build/'
                     src: 'config.*.json'
                     dest: 'dist/'
 
