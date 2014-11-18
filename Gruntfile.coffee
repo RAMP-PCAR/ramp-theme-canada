@@ -40,12 +40,12 @@ module.exports = (grunt) ->
         'copy:build'
         'INTERNAL: Copies files (except JS and CSS) needed for a build.'
         [
-            'copy:configBuild'
             'copy:wetboewBuild'
             'copy:assetsBuild'
             'copy:proxyBuild'
             'copy:localesBuild'
             'mergeLocales'
+            'generateConfig'
             'copy:templatesBuild'
             'notify:assets'
         ]
@@ -327,6 +327,8 @@ module.exports = (grunt) ->
                     tasks.push 'merge-json:locale-' + locale
             )
             
+            tasks.push 'jsonlint:mergedLocales'
+            
             grunt.task.run tasks
     )
 
@@ -347,6 +349,76 @@ module.exports = (grunt) ->
                     data = data.replace 'Done, without errors.', 'Done, thanks!'
                     fs.writeFileSync fileName, data
                     done()
+    )
+    @registerTask(
+        'generateConfig'
+        'INTERNAL: lints and generate language-specific configs from oneConfig and locale strings'
+        [   
+            'copy:configBuild'
+            'jsonlint:oneConfig'
+            'zs3'
+            'jsonlint:locales'
+            'assembleConfigs'
+            'clean:oneConfig'
+        ]            
+    )
+    
+    @registerTask(
+        'zs3'
+        'INTERNAL: Config validation'
+        ->
+            validator = new ZSchema()
+        
+            config = grunt.file.readJSON 'build/config.json'
+            schema = grunt.file.readJSON grunt.config('corepath') + 'src/configSchema.json'
+            draft4 = grunt.file.readJSON grunt.config('corepath') + 'src/draft-04-schema.json'
+        
+            validator.setRemoteReference 'http://json-schema.org/draft-04/schema#', draft4
+        
+            if validator.validate config, schema 
+                grunt.task.run 'notify:configValid'
+            else
+                grunt.task.run 'notify:configInvalid'
+                # use inspector to get to the deeply buried properties
+                console.log util.inspect(validator.getLastErrors(),
+                        showHidden: false
+                        depth: 10
+                    )
+                                     
+                grunt.fail.warn 'Config validation failed!'
+    )
+    
+    @registerTask(
+        'assembleConfigs'
+        'INTERNAL'
+        () ->
+            languages = ['en', 'fr']
+            tasks = []
+            
+            languages.forEach(
+                ( lang ) ->
+                    json = grunt.file.readJSON 'build/locales/' + lang + '-CA/translation.json'
+                    
+                    grunt.config 'replace.config-' + lang,
+                        options:
+                            patterns: [
+                                json: json
+                            ]
+                        files: [
+                            src: 'build/config.json'
+                            dest: 'build/config.' + lang + '.json'
+                        ]
+                        
+                    tasks.push 'replace:config-' + lang
+            )       
+            
+            tasks.push 'notify:configGenerated'
+            tasks.push 'jsonlint:generatedConfigs'
+            tasks.push 'notify:generatedConfigsLint'
+            
+            #console.log grunt.config 'replace'
+            #console.log tasks
+            grunt.task.run tasks
     )
 
     smartExpand = ( cwd, arr, extra ) ->    
@@ -421,34 +493,46 @@ module.exports = (grunt) ->
                 options:
                     message: "Tarball is created!"
 
+            configInvalid:
+                options:
+                    message: "Config is invalid!"
+                    
+            configValid:
+                options:
+                    message: "Config checks out!" 
+
+            templates:
+                options:
+                    message: "Templates are a Go."
+
+            configGenerated:
+                options:
+                    message: "Configs are generated!"
+                    
+            generatedConfigsLint:
+                options:
+                    message: "Generated configs are lint free."
+
         copy:
             configBuild:
                 files: [
                     expand: true
                     cwd: '<%= corepath %>src'
-                    src: 'config.*.json'
+                    src: 'config.json'
                     dest: 'build/'
                 # overrider core config with local if exists
                 ,
                     expand: true
                     cwd: 'src'
-                    src: 'config.*.json'
+                    src: 'config.json'
                     dest: 'build/'
                 ]
 
             configDist:
-                files: [
                     expand: true
-                    cwd: '<%= corepath %>src'
+                cwd: 'build/'
                     src: 'config.*.json'
                     dest: 'dist/'
-                # overrider core config with local if exists
-                ,
-                    expand: true
-                    cwd: 'src'
-                    src: 'config.*.json'
-                    dest: 'dist/'
-                ]
 
             wetboewBuild:
                 expand: true
@@ -524,12 +608,10 @@ module.exports = (grunt) ->
                 dest: 'dist/proxy'
                 
             localesBuild:
-                files: [
                     expand: true
                     cwd: '<%= corepath %>src/locales'
                     src: '**/*.json'
                     dest: 'build/locales'
-                ]   
 
             localesDist:
                 files: [
@@ -932,6 +1014,27 @@ module.exports = (grunt) ->
                 validthis: false
                 noyield: false
 
+        jsonlint:
+            oneConfig:
+                src: [
+                    'build/config.json'
+                ]
+        
+            generatedConfigs:
+                src: [
+                    'build/config.*.json'
+                ]
+                
+            locales:
+                src: [
+                    'src/locales/**/*.json'
+                ]
+                
+            mergedLocales:
+                src: [
+                    'build/locales/**/*.json'
+                ]
+
         jscs: 
             main:
                 options:
@@ -1085,7 +1188,7 @@ module.exports = (grunt) ->
                     'src/js/RAMP/**/*.json'
                 ]
                 tasks: [
-                    'copy:templates'
+                    'copy:templatesBuild'
                 ]
 
             js:
@@ -1111,6 +1214,27 @@ module.exports = (grunt) ->
                     'less'
                     'autoprefixer'
                     'notify:css'
+                ]
+            
+            rampConfig:
+                files: [
+                    'src/config.json'
+                ]
+                tasks: [
+                    'generateConfig'
+                ]
+            
+            locales:
+                files: [
+                    'src/locales/**/*.json'
+                ]
+                
+                tasks: [
+                    #'build'
+                    'generateConfig'
+                    'assemble' #for quicker build only run a subset of build
+                    'notify:page'
+                    'copy:localesBuild'
                 ]
             
             config:
@@ -1149,6 +1273,10 @@ module.exports = (grunt) ->
                 src: [
                     ##'<%= pkg.deployFolder %>'
                 ]
+
+            oneConfig: [
+                'build/config.json'
+            ]                
 
         hub:
             'wet-boew':
@@ -1198,8 +1326,6 @@ module.exports = (grunt) ->
             options:
                 output: '<%= corepkg.ramp.docco.outdir %>'
 
-        
-
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
     @loadNpmTasks 'grunt-autoprefixer'
@@ -1218,6 +1344,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-yuidoc'
     @loadNpmTasks 'grunt-merge-json'
     @loadNpmTasks 'grunt-docco'
+    @loadNpmTasks 'grunt-jsonlint'
     @loadNpmTasks 'grunt-hub'
     @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
