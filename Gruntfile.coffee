@@ -1,10 +1,12 @@
 fs = require("fs")
+ZSchema = require("z-schema")
+util = require('util')
 
 module.exports = (grunt) ->
     
     @registerTask(
         'default'
-        'Default task create a distribution package.'
+        'Default task create both an unminified development and a minified distribution packages.'
         [
             'dist'
         ]
@@ -12,7 +14,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'init'
-        'Only needed when the repo is first cloned'
+        'Only needed when the repo is first cloned. It\'s automatically run after \'npm install\''
         [
             #'hub'
             'thanks'
@@ -22,7 +24,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'build'
-        'Run full build.'
+        'Run full build to create an uminified development package.'
         [
             'clean:build'
             'copy:build'
@@ -36,7 +38,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'copy:build'
-        'INTERNAL: Copies files (except JS and CSS) needed for a build'
+        'INTERNAL: Copies files (except JS and CSS) needed for a build.'
         [
             'copy:configBuild'
             'copy:wetboewBuild'
@@ -51,7 +53,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'js:build'
-        'INTERNAL: Copies and concatenates all JS to the build folder'
+        'INTERNAL: Concatenates, processes and copies all JS to the build folder.'
         ->
             grunt.config(
                 'concat.jsLib.src'
@@ -80,7 +82,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'css:build'
-        'INTERNAL: '
+        'INTERNAL: Concatenates, processes and copies all CSS to the build folder.'
         ->
             grunt.config(
                 'concat.cssLib.src'
@@ -101,7 +103,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'hint'
-        'INTERNAL: Runs JSHint and JSStyle on JS code.'
+        'INTERNAL: Runs JSHint on JS code.'
         [
             'jshint'
             'notify:hint'
@@ -110,7 +112,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'jsstyle'
-        'INTERNAL: '
+        'INTERNAL: Runs JSStyle on JS code.'
         [
             'jscs'
             'notify:jsstyle'
@@ -119,7 +121,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'dist'
-        'Produces the production files'
+        'Create a minified distribution package.'
         [
             'clean:dist'
             'copy:dist'
@@ -139,7 +141,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'copy:dist'
-        'INTERNAL: Copies files (except JS and CSS) needed for a distribution package'
+        'INTERNAL: Copies files (except JS and CSS) needed for a distribution package.'
         [
             'copy:wetboewDist'
             'copy:assetsDist'
@@ -153,6 +155,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'js:dist'
+        'INTERNAL: Minifies JS code.'
         [
             'uglify'
             'replace:jsCoreDist'
@@ -161,7 +164,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'serve:build'
-        'Create unminified docs'
+        'Creates an unminified development package, starts a node server the specified port, watches for modified JS, CSS and other files, and reloads HTML page on change.'
         [
             'build'
             'connect:build'
@@ -171,7 +174,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'serve:dist'
-        'Create unminified docs'
+        'Creates a minified distribution package and starts a node server on the specified port.'
         [
             'dist'
             'connect:dist'
@@ -180,7 +183,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'templatemin'
-        'INTERNAL: Converts templates into proper JSON.'
+        'INTERNAL: Converts templates into (almost) proper JSON.'
         () ->
             templates = grunt.file.expand(
                 'dist/js/RAMP/**/*.json'
@@ -213,7 +216,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'useMinAssets'
-        'Replace unmin WET references with the min paths for HTML files'
+        'Replace unmin WET references with the min paths for HTML files.'
         () ->
             htmlFiles = grunt.file.expand(
                 'dist/**/*.html'
@@ -245,7 +248,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'deploy'
-        'Deploys a dist into the specified folder'
+        'Deploys a dist into the specified folder.'
         [
             'dist'
             'clean:deploy'
@@ -256,7 +259,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'api'
-        'Creating API docs'
+        'Generates API docs.'
         [
             'clean:yuidoc'
             'yuidoc'
@@ -280,7 +283,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'api:enhance'
-        'INTERNAL: '
+        'INTERNAL: Updates API doc templates.'
         () ->
             done = @async()
             themeFileName = "./node_modules/grunt-contrib-yuidoc/node_modules/yuidocjs/themes/default/layouts/main.handlebars"
@@ -339,6 +342,7 @@ module.exports = (grunt) ->
 
     @registerTask(
         'thanks'
+        'INTERNAL: Joke. Shawnfies grunt.'
         ->
             done = @async()
             fileName = './node_modules/grunt/lib/grunt/fail.js'
@@ -727,7 +731,7 @@ module.exports = (grunt) ->
 
             cssLib:
                 dest: 'build/css/lib/lib.css'
-
+            
         cssmin:
             dist:
                 expand: true
@@ -771,7 +775,7 @@ module.exports = (grunt) ->
                 src: '**/*.js'
                 dest: 'dist/js/plugins/'
 
-        "json-minify":
+        'json-minify':
             configDist:
                 files: 'dist/config.*.json'
                 
