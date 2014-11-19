@@ -445,13 +445,13 @@ module.exports = (grunt) ->
             configDist:
                 files: [
                     expand: true
-                    cwd: 'src'
+                    cwd: '<%= corepath %>src'
                     src: 'config.*.json'
                     dest: 'dist/'
                 # overrider core config with local if exists
                 ,
                     expand: true
-                    cwd: '<%= corepath %>src'
+                    cwd: 'src'
                     src: 'config.*.json'
                     dest: 'dist/'
                 ]
@@ -1214,7 +1214,20 @@ module.exports = (grunt) ->
             options:
                 output: '<%= corepkg.ramp.docco.outdir %>'
 
-        
+        bump:
+            options:
+                files: [
+                    'package.json'
+                    'bower.json'
+                ]
+                commitFiles: [
+                    'package.json'
+                    'bower.json'
+                ]
+                commit: true
+                commitMessage: 'Release v%VERSION%',
+                createTag: false
+                push: false 
 
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
@@ -1235,6 +1248,7 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-merge-json'
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-hub'
+    @loadNpmTasks 'grunt-bump'
     @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
     @loadNpmTasks 'grunt-newer'
