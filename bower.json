@@ -24,7 +24,7 @@
         "./lib"
     ],
     "dependencies": {
-        "ramp-pcar": "https://github.com/RAMP-PCAR/RAMP-PCAR.git#develop",
+        "ramp-pcar": "https://github.com/RAMP-PCAR/RAMP-PCAR.git#v4.0.0",
         "gcweb": "https://github.com/wet-boew/GCWeb.git#4.0.5"
     },
     "moduleType": [
