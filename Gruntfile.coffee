@@ -1296,10 +1296,13 @@ module.exports = (grunt) ->
                 ]
 
         compress:
-            tar:
+            tgz:
                 options:
-                    mode: 'tar'
-                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.tar'
+                    mode: 'tgz'
+                    archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.tgz'
+                    level: 9
+                    pretty: true
+                    
                 files: [
                     expand: true
                     src: '**/*'
@@ -1311,6 +1314,7 @@ module.exports = (grunt) ->
                     mode: 'zip'
                     archive: 'tarball/<%= pkg.name %>-dist-<%= pkg.version %>.zip',
                     level: 9
+                    pretty: true
 
                 files: [
                     expand: true
