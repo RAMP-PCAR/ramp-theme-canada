@@ -1,13 +1,13 @@
 {
     "name": "ramp-theme-canada",
     "subname": "Reusable Accessible Mapping Platform - Canada.ca Theme",
-    "version": "5.0.0-5",
+    "version": "5.0.0",
     "description": "RAMP GIS viewer - Elk; Sample of an implementation of RAMP with Canada.ca Theme",
     "main": "index.js",
     "url": "http://tfs.int.ec.gc.ca:8080/tfs/dc/_git/RAMP",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "postinstall": "bower install && cd lib/wet-boew && bower install && npm install && bower link && cd ../GCWeb && bower link wet-boew && npm install && grunt && cd ../.. && grunt init"
+        "postinstall": "bower install && cd lib/wet-boew && bower install && npm install && bower link && cd ../gcweb && bower link wet-boew && npm install && grunt && cd ../.. && grunt init"
     },
     "keywords": [
         "ramp",
@@ -48,6 +48,8 @@
         "grunt-contrib-uglify": "~0.4.0",
         "grunt-contrib-watch": "~0.6.1",
         "grunt-contrib-yuidoc": "~0.5.2",
+        "grunt-gh-pages": "~0.9.1",
+        "grunt-github-releaser": "~0.1.17",
         "grunt-merge-json": "~0.9.5",
         "grunt-docco": "~0.3.3",
         "grunt-hub": "~0.7.0",

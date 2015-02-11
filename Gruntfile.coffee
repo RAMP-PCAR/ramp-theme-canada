@@ -63,6 +63,7 @@ module.exports = (grunt) ->
                     [
                         grunt.config('corepath') + 'src/js/lib/jquery.dataTables.pagination.ramp.js'
                         grunt.config('corepath') + 'src/js/lib/jquery.ui.navigation.ramp.js'
+                        grunt.config('corepath') + 'src/js/lib/jscolor.js'
                     ]
                 )
             )
@@ -421,6 +422,19 @@ module.exports = (grunt) ->
             grunt.task.run tasks
     )
 
+    @registerTask(
+        'release'
+        'INTERNAL Uploads release builds to GitHub releases.'
+        () ->
+            tasks = [
+                'github-release'
+                'gh-pages'
+            ]
+            
+            if process.env.TRAVIS_TAG ##&& (process.env.TRAVIS_BRANCH == 'develop' || process.env.TRAVIS_BRANCH == 'master') 
+                grunt.task.run tasks
+    )
+    
     smartExpand = ( cwd, arr, extra ) ->    
         # determine file order here and concat to arr
         extra = extra or []
@@ -1284,7 +1298,11 @@ module.exports = (grunt) ->
                     'lib/wet-boew/Gruntfile.coffee'
                 ]
                 tasks: [
-                    'dist'
+                    'checkDependencies'
+                    'test'
+                    'build'
+                    'minify'
+                    'i18n_csv:assemble'
                 ]
                         
             'wetTheme':
@@ -1292,7 +1310,8 @@ module.exports = (grunt) ->
                     '<%= pkg.themepath %>Gruntfile.coffee'
                 ]
                 tasks: [
-                    'default'
+                    'build'
+                    'assets-dist'
                 ]
 
         compress:
@@ -1343,8 +1362,46 @@ module.exports = (grunt) ->
                 commit: false
                 commitMessage: 'Release v%VERSION%',
                 createTag: false
-                push: false 
+                push: false
+                
+        'gh-pages':
+            options:
+                clone: 'ramp-theme-dist'
+                # base: 'dist'
 
+            travis:
+                options:
+                    repo: process.env.THEME_DIST_REPO
+                    branch: '<%= pkg.name %>'
+                    message: ((
+                        if process.env.TRAVIS_TAG
+                            "Production files for the " + process.env.TRAVIS_TAG + " release"
+                        else
+                            "Travis build " + process.env.TRAVIS_BUILD_NUMBER + " [" + process.env.TRAVIS_BRANCH + "]"
+                    ))
+                    silent: true
+                    tag: ((
+                        if process.env.TRAVIS_TAG then process.env.TRAVIS_TAG else false
+                    ))
+                src: [
+                    'dist/**/*.*'
+                    'build/**/*.*'
+                    'tarball/**/*.*'
+                ]
+                
+        'github-release':
+            options:
+                repository: process.env.HOME_REPO
+                auth:
+                    user: 'ramp-pcar-bot'
+                    password: process.env.GH_TOKEN
+                release:
+                    draft: false
+                    prerelease: true
+                    tag_name: process.env.TRAVIS_TAG
+            files:
+                src: ['tarball/*.*']
+                
     # These plugins provide necessary tasks.
     @loadNpmTasks 'assemble'
     @loadNpmTasks 'grunt-autoprefixer'
@@ -1361,6 +1418,8 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-contrib-uglify'
     @loadNpmTasks 'grunt-contrib-watch'
     @loadNpmTasks 'grunt-contrib-yuidoc'
+    @loadNpmTasks 'grunt-gh-pages'
+    @loadNpmTasks 'grunt-github-releaser'
     @loadNpmTasks 'grunt-merge-json'
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-jsonlint'

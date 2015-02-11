@@ -1,0 +1,22 @@
+language: node_js
+
+node_js:
+  - "0.10"
+
+branches:
+  only:
+    - develop
+    - master
+    - /^test/.*$/
+    - /^v\d+\.\d+\.\d+(-.+)?$/
+
+before_install: 
+  - echo -e "machine github.com\n  login $GH_TOKEN" >> ~/.netrc
+  - npm install -g grunt-cli
+  - npm install -g bower
+
+script:
+  - grunt
+
+after_success:
+  - grunt release
