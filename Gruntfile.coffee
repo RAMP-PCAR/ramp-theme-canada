@@ -64,6 +64,7 @@ module.exports = (grunt) ->
                         grunt.config('corepath') + 'src/js/lib/jquery.dataTables.pagination.ramp.js'
                         grunt.config('corepath') + 'src/js/lib/jquery.ui.navigation.ramp.js'
                         grunt.config('corepath') + 'src/js/lib/jscolor.js'
+                        grunt.config('corepath') + 'src/js/RAMP/RAMP-starter.js'
                     ]
                 )
             )
@@ -220,7 +221,7 @@ module.exports = (grunt) ->
         'Replace unmin WET references with the min paths for HTML files.'
         () ->
             htmlFiles = grunt.file.expand(
-                'dist/**/*.html'
+                ['dist/**/*.html', 'dist/js/lib/lib.min.js']
             )
 
             htmlFiles.forEach(
@@ -813,6 +814,8 @@ module.exports = (grunt) ->
 
         concat:
             options:
+                process: (src, filepath) ->
+                    src.replace( /\/\/@.*$/mg, '' )
                 stripBanners: false
                 separator: '/* */ \n\r /* */'
 
@@ -923,8 +926,8 @@ module.exports = (grunt) ->
                     usePrefix: false
 
                 files: [
-                    src: 'build/js/RAMP/RAMP-starter.js'
-                    dest: 'build/js/RAMP/RAMP-starter.js'
+                    src: 'build/js/lib/lib.js'
+                    dest: 'build/js/lib/lib.js'
                 ]
 
             jsCoreDist:
@@ -936,8 +939,8 @@ module.exports = (grunt) ->
                     usePrefix: false
 
                 files: [
-                    src: 'dist/js/RAMP/RAMP-starter.js'
-                    dest: 'dist/js/RAMP/RAMP-starter.js'
+                    src: 'dist/js/lib/lib.js'
+                    dest: 'dist/js/lib/lib.js'
                 ]
 
             api_esri:
