@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html class="no-js" lang="{{language}}" dir="{{{i18n "lang-dir"}}}">
+	<head>
+		<meta charset="utf-8" />
+		<!-- Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+		wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html -->
+		<title>{{t "page.title"}} - {{site.sitetitle}}</title>
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<!-- Meta data -->
+		<meta name="description" content="{{#if page.description }}{{page.description}}{{else}}{{{i18n "site-description"}}}{{/if}}" />
+		<!-- Meta data-->
+		{{>headresources}}
+	</head>
+	<body {{#if pageclass}}class="{{pageclass}}" {{/if}}vocab="http://schema.org/" typeof="WebPage">
+		{{!>google}}
+		<ul id="wb-tphp">
+			<li class="wb-slc">
+				<a class="wb-sl" href="#wb-cont">{{{i18n "tmpl-skip-cont"}}}</a>
+			</li>
+{{#isnt footer "false"}}
+			<li class="wb-slc visible-sm visible-md visible-lg">
+				<a class="wb-sl" href="#wb-info">{{{i18n "tmpl-skip-about-site"}}}</a>
+			</li>
+{{/isnt}}
+		</ul>
+		<header role="banner">
+			<div id="wb-bnr" class="container">
+
+				<div class="row">
+					{{>brand}}
+{{#isnt mobimenu "false"}}
+					<section class="wb-mb-links col-xs-4 col-sm-3 visible-sm visible-xs" id="wb-glb-mn" >
+						<h2>{{{i18n "srch-menus"}}}</h2>
+						{{>mobimenu}}
+					</section>
+{{/isnt}}
+{{#isnt sitesearch "false"}}
+					<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+						<h2 class="wb-inv">{{{i18n "tmpl-search"}}}</h2>
+						{{>sitesearch}}
+					</section>
+{{/isnt}}
+				</div>
+			</div>
+
+		</header>
+		
+		<main role="main" property="mainContentOfPage" class="container">
+
+			<div class="col-md-8 col-md-offset-2">
+			{{>body}}
+			</div>
+		</main>
+
+
+	</body>
+</html>
