@@ -15,8 +15,8 @@
 * @uses Util
 */
 
-define(["utils/util", "utils/popupManager"],
-    function (UtilMisc, PopupManager) {
+define(["dojo/_base/lang", "utils/util", "utils/popupManager"],
+    function (lang, UtilMisc, PopupManager) {
         "use strict";
 
         var body = $("body"),
@@ -182,7 +182,7 @@ define(["utils/util", "utils/popupManager"],
              * @return {Object}         This
              * @chainable
              */
-            tooltipster: function (target, type, action) {
+            tooltipster: function (target, type, action, options) {
                 var attr;
                 target = target || $("body");
 
