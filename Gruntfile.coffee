@@ -16,7 +16,6 @@ module.exports = (grunt) ->
         'init'
         'Only needed when the repo is first cloned. It\'s automatically run after \'npm install\''
         [
-            #'hub'
             'thanks'
             'api:enhance'
         ]
@@ -1324,28 +1323,6 @@ module.exports = (grunt) ->
                 'build/config.json'
             ]                
 
-        hub:
-            'wet-boew':
-                src: [
-                    'lib/wet-boew/Gruntfile.coffee'
-                ]
-                tasks: [
-                    'checkDependencies'
-                    'test'
-                    'build'
-                    'minify'
-                    'i18n_csv:assemble'
-                ]
-                        
-            'wetTheme':
-                src: [
-                    '<%= pkg.themepath %>Gruntfile.coffee'
-                ]
-                tasks: [
-                    'build'
-                    'assets-dist'
-                ]
-
         compress:
             tgz:
                 options:
@@ -1455,7 +1432,6 @@ module.exports = (grunt) ->
     @loadNpmTasks 'grunt-merge-json'
     @loadNpmTasks 'grunt-docco'
     @loadNpmTasks 'grunt-jsonlint'
-    @loadNpmTasks 'grunt-hub'
     @loadNpmTasks 'grunt-bump'
     @loadNpmTasks 'grunt-jscs'
     @loadNpmTasks 'grunt-json-minify'
