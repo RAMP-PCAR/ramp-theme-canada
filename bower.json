@@ -25,12 +25,9 @@
     ],
     "dependencies": {
         "ramp-pcar": "https://github.com/RAMP-PCAR/RAMP-PCAR.git#v5.3.1-rc1",
-        "gcweb": "https://github.com/wet-boew/GCWeb.git#4.0.5"
+        "gcweb": "https://github.com/RAMP-PCAR/ramp-wet-dep/raw/dep/v4.0.5/GCWeb.zip"
     },
     "moduleType": [
         "globals"
-    ],
-    "resolutions": {
-        "DataTables": "1.10.1"
-    }
+    ]
 }
