@@ -78,6 +78,8 @@ module.exports = (grunt) ->
                 'copy:jsCore'
                 'copy:jsPlugins'
                 'replace:jsCoreBuild'
+                'replace:ckan'
+                'replace:ckanClean'
                 'notify:js'               
             ]        
     )
@@ -162,6 +164,8 @@ module.exports = (grunt) ->
         [
             'uglify'
             'replace:jsCoreDist'
+            'replace:ckan'
+            'replace:ckanClean'
         ]
     )
 
@@ -785,6 +789,24 @@ module.exports = (grunt) ->
                     localePath: 'build/locales'
                     languages: ['en', 'fr']
 
+            ckan:
+                options:
+                    assets: 'build/js/lib/wet-boew'
+                    rampAssets: 'assets'
+                    
+                    environment:
+                        jqueryVersion: '2.1.1'
+                    flatten: true
+                    plugins: ['assemble-contrib-i18n']
+                    layout: 'jinja.hbs'
+                    i18n:
+                        languages: ['en', 'fr']
+                        templates: [
+                            'site/pages/ramp.hbs'
+                        ]
+                dest: 'build/ckan/'
+                src: '!*.*'
+
             ramp:
                 options:
                     assets: 'build/js/lib/wet-boew'
@@ -965,6 +987,38 @@ module.exports = (grunt) ->
                 files: [
                     src: 'dist/js/lib/lib.js'
                     dest: 'dist/js/lib/lib.js'
+                ]
+
+            ckan:
+                options:
+                    patterns: [
+                        match: /\="\.\/assets/g
+                        replacement: '="{{ramp_server}}./assets'
+                    ]
+                files: [
+                    expand: true
+                    cwd: 'build/ckan'
+                    src: '*.html'
+                    rename: (dest, src) ->
+                                'build/' + src.replace('.html', '-ckan.html');
+                ]
+
+            ckanClean:
+                options:
+                    patterns: [
+                        match: /{{.*}}/g
+                        replacement: ''
+                       ,
+                        match: /{%.*%}/g
+                        replacement: ''
+                    ]
+                    usePrefix: false
+                files: [
+                    expand: true
+                    cwd: 'build'
+                    src: 'ramp-*-ckan.html'
+                    rename: (dest, src) ->
+                                'build/' + src.replace('-ckan.html', '-test.html');
                 ]
 
             api_esri:
