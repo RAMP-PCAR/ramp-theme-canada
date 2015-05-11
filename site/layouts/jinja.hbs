@@ -1,0 +1,149 @@
+﻿{% extends "page.html" %}
+
+{% set ramp_server = h.fgp_url() %}
+
+{% block breadcrumb_content %}
+    \{{ '<li>' + _('Geospatial Viewer') + '</li>' | safe }}
+{% endblock %}
+
+<!DOCTYPE html>
+<html class="no-js" lang="{{language}}" dir="{{{i18n "lang-dir"}}}">
+	<head>
+		<meta charset="utf-8" />
+		<!-- Web Experience Toolkit (WET) / Boîte à outils de l'expérience Web (BOEW)
+		wet-boew.github.io/wet-boew/License-en.html / wet-boew.github.io/wet-boew/Licence-fr.html -->
+		<title>{{t "page.title"}} - {{site.sitetitle}}</title>
+		<meta content="width=device-width, initial-scale=1" name="viewport" />
+		<!-- Meta data -->
+		<meta name="description" content="{{#if page.description }}{{page.description}}{{else}}{{{i18n "site-description"}}}{{/if}}" />
+		<!-- Meta data-->
+        <link href="{{assets}}/assets/favicon.ico" rel="icon" type="image/x-icon" />
+        <link rel="stylesheet" href="{{assets}}/css/wet-boew{{environment.suffix}}.css" />
+        <link rel="stylesheet" href="{{assets}}/css/theme{{environment.suffix}}.css" />
+        {{#if page.css}}{{#each page.css}}<link rel="stylesheet" href="{{this}}{{../environment.suffix}}.css" />{{/each}}{{/if}}
+        {{#compare section "==" "message" }}<link rel="stylesheet" href="{{assets}}/css/messages{{environment.suffix}}.css" />{{/compare}}
+        {{#compare section "==" "mobile-centre" }}<link rel="stylesheet" href="{{assets}}/css/mobile-centre{{environment.suffix}}.css" />{{/compare}}
+        {{#compare section "==" "social-media-centre" }}<link rel="stylesheet" href="{{assets}}/css/social-media-centre{{environment.suffix}}.css" />{{/compare}}
+
+        <!--[if IE 9]>
+        {{#compare section "==" "mobile-centre" }}<link rel="stylesheet" href="{{assets}}/css/mobile-centre-ie{{environment.suffix}}.css" />{{/compare}}
+        {{#compare section "==" "social-media-centre" }}<link rel="stylesheet" href="{{assets}}/css/social-media-centre-ie{{environment.suffix}}.css" />{{/compare}}
+        <![endif]-->
+
+        <noscript><link rel="stylesheet" href="{{assets}}/css/noscript{{environment.suffix}}.css" /></noscript>
+        <script>dataLayer1 = [];</script>
+
+        {% block custom_wet_css %}
+        <!-- RAMP CSS Start -->
+        <link href="\{{ramp_server}}css/lib/lib.css" rel="stylesheet" type="text/css" />
+        <link href="\{{ramp_server}}css/theme.less.css" rel="stylesheet" type="text/css" />
+        <!-- RAMP CSS End -->
+        <!-- EsriCSSStart -->
+        <!--<link media="screen" href="http://js.arcgis.com/3.10/js/esri/css/esri.css"
+              rel="stylesheet" rel="stylesheet">-->
+        <link media="screen" href="http://js.arcgis.com/3.10/js/dojo/dijit/themes/tundra/tundra.css"
+              type="text/css" rel="stylesheet">
+        <!-- EsriCSSEnd -->
+        <script></script>
+        {% endblock %}
+
+	</head>
+	<body {{#if pageclass}}class="{{pageclass}}" {{/if}}vocab="http://schema.org/" typeof="WebPage">
+		{{!>google}}
+		<ul id="wb-tphp">
+			<li class="wb-slc">
+				<a class="wb-sl" href="#wb-cont">{{{i18n "tmpl-skip-cont"}}}</a>
+			</li>
+{{#isnt footer "false"}}
+			<li class="wb-slc visible-sm visible-md visible-lg">
+				<a class="wb-sl" href="#wb-info">{{{i18n "tmpl-skip-about-site"}}}</a>
+			</li>
+{{/isnt}}
+		</ul>
+		<header role="banner">
+			<div id="wb-bnr" class="container">
+{{#isnt languagetoggle "false"}}
+				<section id="wb-lng" class="visible-md visible-lg text-right">
+					<h2 class="wb-inv">{{{i18n "tmpl-lang-select"}}}</h2>
+					{{>languagetoggle}}
+				</section>
+{{/isnt}}
+				<div class="row">
+					{{>brand}}
+{{#isnt mobimenu "false"}}
+					<section class="wb-mb-links col-xs-4 col-sm-3 visible-sm visible-xs" id="wb-glb-mn" >
+						<h2>{{{i18n "srch-menus"}}}</h2>
+						{{>mobimenu}}
+					</section>
+{{/isnt}}
+{{#isnt sitesearch "false"}}
+					<section id="wb-srch" class="col-xs-6 text-right visible-md visible-lg">
+						<h2 class="wb-inv">{{{i18n "tmpl-search"}}}</h2>
+						{{>sitesearch}}
+					</section>
+{{/isnt}}
+				</div>
+			</div>
+{{#isnt sitemenu "false"}}
+			<nav role="navigation" id="wb-sm" class="wb-menu visible-md visible-lg" data-trgt="mb-pnl" data-ajax-fetch="{{assets}}/ajax/sitemenu-{{language}}.html" typeof="SiteNavigationElement">
+				<h2 class="wb-inv">{{{i18n "tmpl-topics-menu"}}}</h2>
+				{{>sitemenu}}
+			</nav>
+{{else}}
+			<span data-trgt="mb-pnl" class="wb-menu hide"></span>
+{{/isnt}}
+{{#isnt breadcrumb "false"}}
+	{{#unless_eq pageclass compare="home"}}
+			<nav role="navigation" id="wb-bc" class="" property="breadcrumb">
+				<h2 class="wb-inv">{{{i18n "you-are-here"}}}</h2>
+				{{>breadcrumbs}}
+			</nav>
+	{{/unless_eq}}
+{{/isnt}}
+		</header>
+		{{>promotion}}
+        {% block content %}
+		<main role="main" property="mainContentOfPage" class="container">
+
+			{{#is page.pageclass "home"}}
+				<h1 property="name" id="wb-cont" class="wb-inv">{{{title}}}</h1>
+			{{else}}
+				{{#is page.pageclass "secondary"}}
+				{{else}}
+                <h1 property="name" id="wb-cont" class="wb-inv">{{{title}}}</h1>
+				{{/is}}
+			{{/is}}
+
+			{{>contentbuttons}}
+			{{>body}}
+			{{!>features}}
+{{#if page.dateModified}}
+	{{#is page.share "true"}}
+			{{>datemodified-share}}
+	{{else}}
+			{{>datemodified}}
+	{{/is}}
+{{/if}}
+		</main>
+        {% endblock %}
+
+{{#isnt footer "false"}}
+		<footer role="contentinfo" id="wb-info">
+			<nav role="navigation" class="container visible-sm visible-md visible-lg wb-navcurr">
+				<h2 class="wb-inv">{{{i18n "tmpl-about-site"}}}</h2>
+				{{>footer}}
+			</nav>
+			{{>footerbrand}}
+		</footer>
+{{/isnt}}
+        {% block page_extra_scripts %}
+        <!--[if IE 9]>
+        <script src="\{{ramp_server}}js/polyfill/xhook.min.js"></script>
+        <script src="\{{ramp_server}}js/polyfill/xhook-cors-ie9.js"></script>
+        <![endif]-->
+
+        <!-- RAMP-starter.js is now directly appended to lib.js -->
+        <script type="text/javascript" src="\{{ramp_server}}js/lib/lib.js"></script>
+        {% endblock %}
+	</body>
+</html>
