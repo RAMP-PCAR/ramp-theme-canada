@@ -22,8 +22,8 @@ define(["dojo/_base/lang", "utils/util", "utils/popupManager"],
         var body = $("body"),
             wbCore = $("main"),
             wbFoot = $("footer"),
-            footNav = wbFoot.find('.wb-navcurr'),
-
+            footContainer = wbFoot.find('.footer-container'),
+            
             megaMenuDiv = $("#wb-sm"),
             //navigation = $("#wb-bar"),
             //title = navigation.next(),
@@ -55,10 +55,11 @@ define(["dojo/_base/lang", "utils/util", "utils/popupManager"],
             isFullScreen = false,
             fullScreenTimeLine = new TimelineLite({ paused: true }),
             subpanelTimeline = new TimelineLite();
-        
+
         footerTimeLine
-            .to(footNav, transitionDuration, { top: "-313px", ease: "easeOutCirc" })
-            .set(footNav, { className: "+=expanded" }, 0);
+            .to(footContainer, transitionDuration, { height: '471px', ease: "easeOutCirc" })
+            .set(footContainer, { scrollTop: 0 }, 0) // this is needed to reset scroll when you tab to links in the footer nav
+            .set(wbFoot, { className: "+=expanded" }, 0);
 
         // tweening wet template parts
         fullScreenTimeLine
@@ -114,7 +115,10 @@ define(["dojo/_base/lang", "utils/util", "utils/popupManager"],
         // register a popup to open footer navigation on hover and focus
         PopupManager.registerPopup(wbFoot, "hoverIntent, focus",
             function (d) {
-                footerTimeLine.onComplete = function () { d.resolve(); };
+                footerTimeLine.eventCallback('onComplete',
+                    function () {
+                        d.resolve();
+                    });
                 footerTimeLine.play();
             },
             {
@@ -122,14 +126,18 @@ define(["dojo/_base/lang", "utils/util", "utils/popupManager"],
                 useAria: false,
                 timeout: 500,
                 closeHandler: function (d) {
-                    footerTimeLine.onComplete = function () { d.resolve(); };
+                    footerTimeLine.eventCallback('onReverseComplete',
+                        function () {
+                            footContainer.scrollTop(0); // this is needed to reset scroll when you tab to links in the footer nav
+                            d.resolve();
+                        });
                     footerTimeLine.reverse();
                 }
             }
         );
 
         // hide footer navigation on load
-        TweenLite.to(footNav, transitionDuration, { top: "74px", ease: "easeOutCirc" });
+        TweenLite.to(footContainer, transitionDuration, { height: "84px", ease: "easeOutCirc" });
 
         return {
             /**
@@ -235,7 +243,7 @@ define(["dojo/_base/lang", "utils/util", "utils/popupManager"],
                                 } else {
                                     node.attr("title", node.data("tooltip"));
                                 }
-                                
+
                                 node.tooltipster(
                                     lang.mixin({
                                         theme: node.data("tooltip-theme") || attr.theme,

@@ -1,7 +1,7 @@
 ﻿main {
     top: @header-height;
     bottom: @footer-height;
-    width: 100% !important;    
+    width: 100% !important;
 }
 
 header {
@@ -51,12 +51,20 @@ footer {
     border-top: none;
     z-index: 50 !important;
 
+    .footer-container {
+        height: 471px;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        overflow: hidden;
+    }
+
     .wb-navcurr {
-        position: absolute !important;
         right: 0;
         left: 0;
-        top: -313px;
+        bottom: -74px;
         z-index: 1;
+
 
         &:before {
             content: "";
@@ -67,11 +75,15 @@ footer {
             top: 0;
             bottom: 0;
             display: block;
-            border-top: 1px solid @light-grey-color;            
+            border-top: 1px solid @light-grey-color;
         }
+    }
 
-        &.expanded:before {
-            box-shadow: @upper-large-shadow-out;
+    &.expanded {
+        .wb-navcurr {
+            &:before {
+                box-shadow: @upper-large-shadow-out;
+            }
         }
     }
 }
