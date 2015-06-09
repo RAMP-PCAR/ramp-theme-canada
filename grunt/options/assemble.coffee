@@ -12,3 +12,18 @@ module.exports =
         dest: 'build/ajax/'
         src: '*.hbs'
 
+    ckan:
+        options:
+            assets: 'build/js/lib/wet-boew'
+            rampAssets: 'assets'
+            
+            environment:
+                jqueryVersion: '2.1.1'
+            flatten: true
+            plugins: ['assemble-contrib-i18n']
+            layout: 'jinja.hbs'
+            i18n:
+                languages: ['en', 'fr']
+                templates: [ 'site/pages/ramp.hbs' ]
+        dest: 'build/ckan/'
+        src: '!*.*'
